@@ -180,6 +180,8 @@ function postinstallBuild () {
   // the parent directory is `node_modules` but the package can be nested
   // in multiple parent directories so we split apart the name of the module.
   var parentDirs = CWD.split(path.sep)
+  console.log(CWD, path.sep, parentDirs);
+  console.log(process.env);
   var isDependency = parentDirs.indexOf('node_modules') !== -1
 
   if (flags.onlyAsDependency && !isDependency) {
@@ -198,6 +200,11 @@ function postinstallBuild () {
   var isOnlyProduction = (process.env.npm_config_only === 'production' ||
                           process.env.npm_config_only === 'prod')
   var shouldPrune = isDependency || isProduction || isOnlyProduction
+
+  console.log(`config_prod: `, process.env.npm_config_production);
+  console.log(`config_only: `, process.env.npm_config_only);
+  console.log(`flags: `, flags);
+  console.log(`isDependency: `, isDependency);
 
   var getInstallArgs = function () {
     var packageFile = path.join(CWD, 'package.json')
@@ -299,6 +306,7 @@ function postinstallBuild () {
     // installed in order to determine whether they need to be pruned at the
     // end or not. And if we already have `devDependencies` then installing
     // here isn't going to get us anything.
+    console.log(`shouldPrune: ${shouldPrune}`);
     if (shouldPrune) {
       // If `installArgs` is empty, the build doesn't depend on installing any
       // extra dependencies.
